@@ -85,6 +85,32 @@ public function behaviors()
     return $behaviors;
 }
 ```
+The basic implementation of the HttpBasicAuth authentication is:
+```
+public function behaviors()
+{    
+    $behaviors = parent::behaviors();    
+    $behaviors['authenticator'] = [            
+        'class' => yii\filters\auth\HttpBasicAuth::className(),           
+        'auth' => function($username, $password) {            
+                        // return null or identity interface    
+                        // For example search by username and password    
+                        return \common\models\User::findOne(['username' => $username, 'password' => $password);           
+                  }           
+        /*           
+        'auth' => [$this, 'httpBasicAuthHandler'],           
+        */    
+     ];    
+     return $behaviors;
+}
+
+public function httpBasicAuthHandler($username, $password)
+{    
+    // For example search by username and password    
+    return \common\models\User::findOne(['username' => $username, 'password' => $password]);
+}
+
+```
 
 Each element in `authMethods` should be an auth method class name or a configuration array.
 
